@@ -61,7 +61,6 @@ class BPR(nn.Module):
         x_uij = (
                 (ui_latent_factors * diff_latent_factors).sum(dim=1).unsqueeze(-1)
         )
-
         return cast(torch.Tensor, x_uij.squeeze())
 
     @torch.no_grad()
@@ -108,8 +107,6 @@ class BPR(nn.Module):
         items_selector: Union[slice, torch.Tensor] = (
             slice(None) if items is None else items
         )
-        repeat_factors = (max(users.size()), 1) if use_matmul else (1, 1)
-
         u_latent_factors = self.gamma_users(users).squeeze()
 
         if u_latent_factors.dim() == 1:

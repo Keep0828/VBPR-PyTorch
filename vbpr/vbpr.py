@@ -88,7 +88,6 @@ class VBPR(nn.Module):
             .unsqueeze(-1)
             + diff_features.mm(self.visual_bias.weight)
         )
-
         return cast(torch.Tensor, x_uij.squeeze())
 
     @torch.no_grad()
@@ -177,9 +176,7 @@ class VBPR(nn.Module):
             )
 
         x_ui = i_bias + latent_component + visual_component + opinion_visual_appearance
-        print('x_ui: ', x_ui)
         if items is None:
-            print("items is None, i_bias.size(1) = ", i_bias.size(1))
             if x_ui.size() != (users.size(0), i_bias.size(1)):
                 x_ui = x_ui.T
         elif x_ui.size() == (users.size(1), items.size(0)):

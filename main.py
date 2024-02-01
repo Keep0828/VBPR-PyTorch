@@ -23,8 +23,9 @@ model = VBPR(
     torch.tensor(features, dtype=torch.float32),
     dim_gamma=20,
     dim_theta=20,
-)
-optimizer = optim.SGD(model.parameters(), lr=5e-04)
+).to(torch.device("cuda" if torch.cuda.is_available() else "cpu"))
+
+optimizer = optim.Adam(model.parameters(), lr=5e-04)
 
 trainer = Trainer(model, optimizer)
 trainer.fit(dataset, n_epochs=10)

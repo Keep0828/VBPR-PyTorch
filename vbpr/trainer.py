@@ -7,9 +7,13 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 from tqdm.autonotebook import tqdm
 
-from .datasets import AmazonDataset, AmazonSample, AmazonDataset, AmazonSample
+from .datasets import AmazonDataset, AmazonSample
 from .vbpr import VBPR
 from .bpr import BPR
+
+
+def _L2_loss_mean(x):
+    return torch.mean(torch.sum(torch.pow(x, 2), dim=1, keepdim=False) / 2.)
 
 
 class WandBCallback(Protocol):
@@ -37,6 +41,7 @@ class Trainer:
         self.optimizer = optimizer
         self.scheduler = scheduler
         self.device = device
+        print(self.model)
 
     def setup_dataloaders(
         self, dataset: AmazonDataset, batch_size: int = 64, num_workers: int = 0
@@ -182,6 +187,13 @@ class Trainer:
                 outputs = self.model(uid, iid, jid)
                 outputs = outputs.unsqueeze(0)
                 loss = -torch.nn.functional.logsigmoid(outputs).sum()
+                use_l2_loss = False
+                if use_l2_loss and isinstance(self.model, BPR):
+                    l2_loss = _L2_loss_mean(self.model.gamma_users(uid)) \
+                              + _L2_loss_mean(self.model.gamma_items(iid)) \
+                              + _L2_loss_mean(self.model.gamma_items(jid))
+                    l2_loss_lambda = 1e-5
+                    loss = loss + l2_loss_lambda * l2_loss
                 # Backward
                 loss.backward()
                 # Update parameters

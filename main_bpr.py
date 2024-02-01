@@ -23,7 +23,8 @@ model = BPR(
     dataset.n_items,
     dim_gamma=20
 )
-optimizer = optim.SGD(model.parameters(), lr=5e-04)
+print(model.state_dict().keys())
+optimizer = optim.Adam(model.parameters(), lr=5e-04)
 
 trainer = Trainer(model, optimizer)
 trainer.fit(dataset, n_epochs=10)
