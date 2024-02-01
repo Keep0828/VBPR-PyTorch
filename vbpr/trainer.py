@@ -44,7 +44,7 @@ class Trainer:
         print(self.model)
 
     def setup_dataloaders(
-        self, dataset: AmazonDataset, batch_size: int = 64, num_workers: int = 0
+        self, dataset: AmazonDataset, batch_size: int = 4096, num_workers: int = 0
     ) -> Tuple[
         DataLoader[AmazonSample], DataLoader[AmazonSample], DataLoader[AmazonSample]
     ]:
