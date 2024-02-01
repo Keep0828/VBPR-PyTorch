@@ -9,6 +9,7 @@ from tqdm.autonotebook import tqdm
 
 from .datasets import AmazonDataset, AmazonSample, AmazonDataset, AmazonSample
 from .vbpr import VBPR
+from .bpr import BPR
 
 
 class WandBCallback(Protocol):
@@ -25,7 +26,7 @@ class WandBCallback(Protocol):
 class Trainer:
     def __init__(
         self,
-        model: VBPR,
+        model: Optional[VBPR, BPR],
         optimizer: optim.Optimizer,
         scheduler: Optional[optim.lr_scheduler.ReduceLROnPlateau] = None,
         device: Optional[torch.device] = None,
