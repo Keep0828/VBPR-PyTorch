@@ -7,7 +7,7 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 from tqdm.autonotebook import tqdm
 
-from .datasets import TradesyDataset, TradesySample
+from .datasets import AmazonDataset, AmazonSample, AmazonDataset, AmazonSample
 from .vbpr import VBPR
 
 
@@ -38,9 +38,9 @@ class Trainer:
         self.device = device
 
     def setup_dataloaders(
-        self, dataset: TradesyDataset, batch_size: int = 64, num_workers: int = 0
+        self, dataset: AmazonDataset, batch_size: int = 64, num_workers: int = 0
     ) -> Tuple[
-        DataLoader[TradesySample], DataLoader[TradesySample], DataLoader[TradesySample]
+        DataLoader[AmazonSample], DataLoader[AmazonSample], DataLoader[AmazonSample]
     ]:
         training_subset, validation_subset, evaluation_subset = dataset.split()
         training_dl = DataLoader(
@@ -60,7 +60,7 @@ class Trainer:
 
     def fit(
         self,
-        dataset: TradesyDataset,
+        dataset: AmazonDataset,
         n_epochs: int = 1,
         wandb_callback: Optional[WandBCallback] = None,
         **dataloaders_kwargs: int,
@@ -155,7 +155,7 @@ class Trainer:
         return self.model
 
     def training_step(
-        self, dataloader: DataLoader[TradesySample], pbar: Optional[tqdm[Any]] = None
+        self, dataloader: DataLoader[AmazonSample], pbar: Optional[tqdm[Any]] = None
     ) -> Dict[str, float]:
         # Set correct model mode
         self.model = self.model.train()
@@ -204,8 +204,8 @@ class Trainer:
 
     def evaluation(
         self,
-        full_dataset: TradesyDataset,
-        dataloader: DataLoader[TradesySample],
+        full_dataset: AmazonDataset,
+        dataloader: DataLoader[AmazonSample],
         cold_only: bool = False,
         pbar: Optional[tqdm[Any]] = None,
     ) -> float:

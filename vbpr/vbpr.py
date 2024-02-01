@@ -78,7 +78,6 @@ class VBPR(nn.Module):
         # Precompute differences
         diff_features = pi_features - ni_features
         diff_latent_factors = pi_latent_factors - ni_latent_factors
-
         # x_uij
         x_uij = (
             pi_bias
