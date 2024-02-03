@@ -7,7 +7,8 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 from tqdm.autonotebook import tqdm
 
-from .datasets import AmazonDataset, AmazonSample
+# from .datasets import AmazonDataset, AmazonSample
+from .datasets import MovielensDataset, MovielensSample
 from .vbpr import VBPR
 from .bpr import BPR
 
@@ -44,9 +45,9 @@ class Trainer:
         print(self.model)
 
     def setup_dataloaders(
-        self, dataset: AmazonDataset, batch_size: int = 4096, num_workers: int = 0
+        self, dataset: MovielensDataset, batch_size: int = 4096, num_workers: int = 0
     ) -> Tuple[
-        DataLoader[AmazonSample], DataLoader[AmazonSample], DataLoader[AmazonSample]
+        DataLoader[MovielensSample], DataLoader[MovielensSample], DataLoader[MovielensSample]
     ]:
         training_subset, validation_subset, evaluation_subset = dataset.split()
         training_dl = DataLoader(
@@ -66,7 +67,7 @@ class Trainer:
 
     def fit(
         self,
-        dataset: AmazonDataset,
+        dataset: MovielensDataset,
         n_epochs: int = 1,
         wandb_callback: Optional[WandBCallback] = None,
         **dataloaders_kwargs: int,
@@ -161,7 +162,7 @@ class Trainer:
         return self.model
 
     def training_step(
-        self, dataloader: DataLoader[AmazonSample], pbar: Optional[tqdm[Any]] = None
+        self, dataloader: DataLoader[MovielensSample], pbar: Optional[tqdm[Any]] = None
     ) -> Dict[str, float]:
         # Set correct model mode
         self.model = self.model.train()
@@ -217,8 +218,8 @@ class Trainer:
 
     def evaluation(
         self,
-        full_dataset: AmazonDataset,
-        dataloader: DataLoader[AmazonSample],
+        full_dataset: MovielensDataset,
+        dataloader: DataLoader[MovielensSample],
         cold_only: bool = False,
         pbar: Optional[tqdm[Any]] = None,
     ) -> float:
